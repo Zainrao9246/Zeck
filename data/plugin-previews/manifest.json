@@ -1,0 +1,33 @@
+{
+  "generatedAt": null,
+  "previews": {
+    "od-code-migration": {
+      "video": "od-code-migration/96efd2e30c163551/preview.mp4",
+      "poster": "od-code-migration/96efd2e30c163551/poster.jpg",
+      "durationMs": 3867,
+      "holdMs": 2500,
+      "hash": "96efd2e30c163551"
+    },
+    "od-new-generation": {
+      "video": "od-new-generation/7b884ba518d75c52/preview.mp4",
+      "poster": "od-new-generation/7b884ba518d75c52/poster.jpg",
+      "durationMs": 1267,
+      "holdMs": 1267,
+      "hash": "7b884ba518d75c52"
+    },
+    "od-figma-migration": {
+      "video": "od-figma-migration/d91113d74728dbb7/preview.mp4",
+      "poster": "od-figma-migration/d91113d74728dbb7/poster.jpg",
+      "durationMs": 1267,
+      "holdMs": 1267,
+      "hash": "d91113d74728dbb7"
+    },
+    "od-tune-collab": {
+      "video": "od-tune-collab/b6460e965b3c5872/preview.mp4",
+      "poster": "od-tune-collab/b6460e965b3c5872/poster.jpg",
+      "durationMs": 1267,
+      "holdMs": 1267,
+      "hash": "b6460e965b3c5872"
+    }
+  }
+}
