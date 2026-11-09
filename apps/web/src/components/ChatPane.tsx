@@ -2544,14 +2544,9 @@ export function ChatPane({
   const errorCardOwnerId =
     !accessErrorCopy && retryAssistant && failedRunErrorEvent ? retryAssistant.id : null;
   // OPEND-2807 / G16: the failed run selects one fixed recovery action.
-  // The classifier still owns approved copy and handoffs, never extra buttons.
-  const failedRunUsesCloud = retryAssistant?.agentId === 'amr';
-  const showCloudSwitchCta = Boolean(
-    retryAssistant && !failedRunUsesCloud
-    && (onSwitchToAmrAndRetry || onOpenAmrSettings),
-  );
-  // Every failed run keeps exactly one recovery action: the Cloud handoff
-  // while it is wired, otherwise the run's own retry.
+  // The legacy cloud handoff is intentionally disabled in this build, so the
+  // local retry remains the only action the UI exposes.
+  const showCloudSwitchCta = false;
   const showRetry = Boolean(retryAssistant && onRetry && !showCloudSwitchCta);
   const [supportDialogOpen, setSupportDialogOpen] = useState(false);
   // The separate balance card retains its existing plans entry.
@@ -4632,40 +4627,7 @@ export function ChatPane({
                             {t(retryLabelKey)}
                           </RunErrorCardAction>
                         ) : null}
-                        {showCloudSwitchCta ? (
-                          <RunErrorCardAction
-                            type="button"
-                            variant="primary"
-                            data-testid="chat-error-switch-to-cloud"
-                            // `handleSwitchToAmrAndRetry` 头一行就是同一道门控;
-                            // 挡住时这颗按钮点下去连设置面板都不会开。
-                            disabled={recoveryActionsDisabled}
-                            onClick={() => {
-                              trackRunFailedToastGoAmrClick(analytics.track, {
-                                page_name: 'chat_panel',
-                                area: 'chat_panel',
-                                element: 'go_amr',
-                              });
-                              recordAmrEntry(
-                                analytics.track,
-                                'chat_error_switch_retry_card',
-                                new Date(),
-                                { metricsConsent: config?.telemetry?.metrics === true },
-                              );
-                              if (retryAssistant && onSwitchToAmrAndRetry) {
-                                trackRecoveryClick(retryAssistant, 'switch_runtime_retry', {
-                                  agentProviderId: 'amr',
-                                  modelId: config?.agentModels?.amr?.model?.trim() || 'default',
-                                });
-                                onSwitchToAmrAndRetry(retryAssistant);
-                              } else {
-                                onOpenAmrSettings?.();
-                              }
-                            }}
-                          >
-                            {t('chat.amrCard.switchCta')}
-                          </RunErrorCardAction>
-                        ) : null}
+                        {/* Legacy OpenDesign Cloud handoff is disabled in this build. */}
                       </>
                     )}
                   />

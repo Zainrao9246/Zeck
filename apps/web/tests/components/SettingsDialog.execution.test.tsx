@@ -3627,8 +3627,8 @@ describe('SettingsDialog execution settings Local CLI interactions', () => {
     fireEvent.click(
       await within(amrCard).findByRole('button', { name: 'Sign up / Sign in' }),
     );
-    // Selected in Settings only: committing a signed-out OpenDesign would
-    // send the user back to onboarding.
+    // Disabled cloud runtime: a selected AMR card can still start sign-in, but
+    // the app must never persist AMR as the active daemon CLI after login.
     expect(
       onPersist.mock.calls.some(([config]) => (config as AppConfig).agentId === 'amr'),
     ).toBe(false);
@@ -3637,7 +3637,7 @@ describe('SettingsDialog execution settings Local CLI interactions', () => {
       () => {
         expect(
           onPersist.mock.calls.some(([config]) => (config as AppConfig).agentId === 'amr'),
-        ).toBe(true);
+        ).toBe(false);
       },
       { timeout: 8000 },
     );

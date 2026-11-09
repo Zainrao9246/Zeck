@@ -1704,16 +1704,14 @@ export function SettingsDialog({
   const [amrCardStatus, setAmrCardStatus] = useState<VelaLoginStatus | null>(null);
   const [amrCardStatusReady, setAmrCardStatusReady] = useState(false);
   const amrCardSignedIn = isAmrSessionAuthenticated(amrCardStatus);
-  // Picking OpenDesign while signed out only selects it inside Settings:
-  // writing `agentId: 'amr'` without a session trips App's "cloud identity
-  // rejected" guard, which bounces the user to onboarding. The selected card
-  // offers sign-in instead, and the choice is committed once a session
-  // exists — from whichever surface observed it first.
+  // The legacy cloud runtime is intentionally disabled in this build. Keep the
+  // app on the local runtime and never auto-promote a signed-in AMR session to
+  // the active daemon agent selection.
   const [amrPendingSelect, setAmrPendingSelect] = useState(false);
   useEffect(() => {
     if (!amrPendingSelect || !isAmrSessionAuthenticated(amrCardStatus)) return;
     setAmrPendingSelect(false);
-    setCfg((c) => ({ ...c, agentId: 'amr' }));
+    setCfg((c) => ({ ...c, agentId: null }));
   }, [amrPendingSelect, amrCardStatus]);
   const [amrWalletSnapshot, setAmrWalletSnapshot] = useState<AmrWalletSnapshot | null>(null);
   const [amrWalletReady, setAmrWalletReady] = useState(false);
