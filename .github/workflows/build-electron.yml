@@ -2,22 +2,6 @@ name: Build Electron apps
 
 on:
   workflow_dispatch:
-    inputs:
-      mac_arm64:
-        description: Build macOS arm64 DMG
-        required: true
-        type: boolean
-        default: false
-      win_x64:
-        description: Build Windows x64 NSIS installer
-        required: true
-        type: boolean
-        default: true
-      linux_x64:
-        description: Build Linux x64 AppImage
-        required: true
-        type: boolean
-        default: false
   pull_request:
     paths:
       - "apps/desktop/**"
@@ -47,43 +31,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  mac_arm64:
-    name: macOS arm64
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.mac_arm64 }}
-    runs-on: macos-14
-    steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: pnpm/action-setup@v5
-        with:
-          version: 10.33.2
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 24
-          cache: pnpm
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Resolve app version
-        id: version
-        run: echo "version=$(node -p \"require('./package.json').version\")" >> "$GITHUB_OUTPUT"
-      - name: Build macOS DMG
-        run: >-
-          pnpm exec tools-pack mac build
-          --namespace build-electron-mac
-          --portable
-          --app-version "${{ steps.version.outputs.version }}"
-          --to dmg
-          --json
-      - name: Upload macOS artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: zeck-macos-arm64
-          path: .tmp/tools-pack/out/mac/namespaces/build-electron-mac/builder/*.dmg
-          if-no-files-found: error
-          retention-days: 14
-
   win_x64:
     name: Windows x64
-    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.win_x64) }}
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v6.0.2
@@ -116,40 +65,5 @@ jobs:
         with:
           name: zeck-windows-x64
           path: .tmp/tools-pack/out/win/namespaces/build-electron-win/builder/*.exe
-          if-no-files-found: error
-          retention-days: 14
-
-  linux_x64:
-    name: Linux x64
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.linux_x64 }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: pnpm/action-setup@v5
-        with:
-          version: 10.33.2
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 24
-          cache: pnpm
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Resolve app version
-        id: version
-        run: echo "version=$(node -p \"require('./package.json').version\")" >> "$GITHUB_OUTPUT"
-      - name: Build Linux AppImage
-        run: >-
-          pnpm exec tools-pack linux build
-          --namespace build-electron-linux
-          --portable
-          --app-version "${{ steps.version.outputs.version }}"
-          --to appimage
-          --containerized
-          --json
-      - name: Upload Linux artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: zeck-linux-x64
-          path: .tmp/tools-pack/out/linux/namespaces/build-electron-linux/builder/*.AppImage
           if-no-files-found: error
           retention-days: 14
