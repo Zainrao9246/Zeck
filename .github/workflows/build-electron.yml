@@ -7,7 +7,7 @@ on:
         description: Build macOS arm64 DMG
         required: true
         type: boolean
-        default: true
+        default: false
       win_x64:
         description: Build Windows x64 NSIS installer
         required: true
@@ -17,7 +17,7 @@ on:
         description: Build Linux x64 AppImage
         required: true
         type: boolean
-        default: true
+        default: false
   pull_request:
     paths:
       - "apps/desktop/**"
@@ -42,7 +42,7 @@ concurrency:
 jobs:
   mac_arm64:
     name: macOS arm64
-    if: ${{ github.event_name == 'pull_request' || inputs.mac_arm64 }}
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.mac_arm64 }}
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v6.0.2
@@ -76,7 +76,7 @@ jobs:
 
   win_x64:
     name: Windows x64
-    if: ${{ github.event_name == 'pull_request' || inputs.win_x64 }}
+    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.win_x64) }}
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v6.0.2
@@ -114,7 +114,7 @@ jobs:
 
   linux_x64:
     name: Linux x64
-    if: ${{ github.event_name == 'pull_request' || inputs.linux_x64 }}
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.linux_x64 }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6.0.2
