@@ -715,6 +715,8 @@ export const ja: Dict = {
   'modelCost.halfToOne': '中コスト',
   'modelCost.oneToFour': '高コスト',
   'modelCost.overFour': '最高コスト',
+  'modelCost.free': '無料',
+  'modelCost.freeTier': '無料枠（上限あり）',
   'settings.fetchModels': 'モデルを取得',
   'settings.fetchModelsTitle': 'このプロバイダーから利用可能なモデルを取得',
   'settings.fetchModelsRunning': 'モデルを取得中…',

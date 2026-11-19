@@ -704,6 +704,8 @@ export const zhCN: Dict = {
   "modelCost.halfToOne": "中成本",
   "modelCost.oneToFour": "高成本",
   "modelCost.overFour": "最高成本",
+  "modelCost.free": "免费",
+  "modelCost.freeTier": "免费额度（有限）",
   "settings.fetchModels": "拉取模型",
   "settings.fetchModelsTitle": "从当前提供方拉取可用模型",
   "settings.fetchModelsRunning": "正在拉取模型…",

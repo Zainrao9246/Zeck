@@ -715,6 +715,8 @@ export const it: Dict = {
   'modelCost.halfToOne': 'Costo medio',
   'modelCost.oneToFour': 'Costo alto',
   'modelCost.overFour': 'Costo massimo',
+  'modelCost.free': 'Gratis',
+  'modelCost.freeTier': 'Piano gratuito (con limiti)',
   'settings.fetchModels': 'Recupera modelli',
   'settings.fetchModelsTitle': 'Recupera i modelli disponibili da questo provider',
   'settings.fetchModelsRunning': 'Recupero dei modelli…',

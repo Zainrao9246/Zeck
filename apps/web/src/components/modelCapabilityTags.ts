@@ -6,7 +6,13 @@ export type ModelCapabilityTag =
   | 'advanced'
   | 'bestQuality';
 
-export type ModelCostTier = 'low' | 'medium' | 'high' | 'very_high';
+export type ModelCostTier =
+  | 'free'
+  | 'free_tier'
+  | 'low'
+  | 'medium'
+  | 'high'
+  | 'very_high';
 
 export const MODEL_CAPABILITY_TAG_LABEL_KEYS: Record<
   ModelCapabilityTag,
@@ -27,6 +33,8 @@ export const MODEL_CAPABILITY_TAG_DESCRIPTION_KEYS: Record<
 };
 
 export const MODEL_COST_TIER_LABEL_KEYS: Record<ModelCostTier, keyof Dict> = {
+  free: 'modelCost.free',
+  free_tier: 'modelCost.freeTier',
   low: 'modelCost.upToHalf',
   medium: 'modelCost.halfToOne',
   high: 'modelCost.oneToFour',
@@ -56,7 +64,14 @@ export function getModelCostTier(
 ): ModelCostTier | null {
   if (isNonModelId(model.id)) return null;
   const cost = model.metadata?.cost;
-  if (cost === 'low' || cost === 'medium' || cost === 'high' || cost === 'very_high') {
+  if (
+    cost === 'free' ||
+    cost === 'free_tier' ||
+    cost === 'low' ||
+    cost === 'medium' ||
+    cost === 'high' ||
+    cost === 'very_high'
+  ) {
     return cost;
   }
   return null;

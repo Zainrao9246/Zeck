@@ -715,6 +715,8 @@ export const esES: Dict = {
   'modelCost.halfToOne': 'Coste medio',
   'modelCost.oneToFour': 'Coste alto',
   'modelCost.overFour': 'Coste máximo',
+  'modelCost.free': 'Gratis',
+  'modelCost.freeTier': 'Plan gratuito (con límites)',
   'settings.fetchModels': 'Obtener modelos',
   'settings.fetchModelsTitle': 'Obtener los modelos disponibles de este proveedor',
   'settings.fetchModelsRunning': 'Obteniendo modelos…',

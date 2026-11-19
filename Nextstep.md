@@ -1,24 +1,92 @@
-## Done so far
+# Zeck project handoff
 
-- I inspected the runtime registry, AMR runtime definition, and web app for remaining AMR/cloud paths. The AMR runtime and substantial web integration still exist.
-- I checked MiniMax separately. It appears in provider and media configuration; it is not the same thing as the AMR runtime.
-- I made limited edits in `ChatPane.tsx` and `SettingsDialog.tsx`. They target the cloud-switch recovery action and an AMR selection path. They do **not** remove AMR from the repo.
-- `pnpm install` completed. It reported the lockfile was up to date and warned that some dependency build scripts were ignored.
-- Your latest terminal context says `git push -u origin main` succeeded. I can’t confirm from that alone which exact file changes were included in the pushed commit.
+Updated 2026-11-19.
 
-Correction: I previously said a test found a Settings regression, but I don’t have test output supporting that. Treat that claim as unverified. I also do not have a confirmed successful typecheck after dependencies were installed.
+## Current status
 
-## Still to edit
+- The web document title is `Zeck` (`apps/web/app/layout.tsx`). Packaged app
+  identity is still `Open Design`; the release-channel identity rules in
+  `AGENTS.md` were intentionally not changed.
+- The current `main` branch was at `8894e58` and matched `origin/main` before
+  this work. The model-label changes described below are still uncommitted and
+  have **not** been sent to GitHub.
+- The model-label changes passed focused tests, `pnpm guard`, and
+  `pnpm typecheck`. This is enough for code review and focused testing, but a
+  Windows installer has not been produced, so do not call the app installer
+  ready yet.
+- Windows packaging was attempted with `pnpm tools-pack win build --to nsis
+  --json` and stopped because the repository is missing the required
+  `assets/community-pets` directory. `tools/pack/src/resources/index.ts`
+  bundles it and `tools/pack/src/win/resources.ts` hashes it.
+- Upstream `nexu-io/open-design` has the directory at
+  <https://github.com/nexu-io/open-design/tree/main/assets/community-pets>.
+  It contains `clippit`, `dario`, `dentist`, `nyako-shigure`, `slavik`, `tux`,
+  `yelling-dario`, and `yorha-sit-2b`; each folder has `pet.json` and
+  `spritesheet.webp`. Manifests identify the content as community/local assets;
+  at least Clippy and YoRHa 2B are recognizable third-party characters. Do not
+  copy these spritesheets without confirming their asset-specific reuse rights.
 
-If your goal is to **remove AMR/cloud entirely**, much more work remains. It spans active runtime registration and behavior, web login/settings/recovery/billing UI, daemon routes and integrations, packaged configuration, contracts, translations, and tests. Some AMR references may support collaboration or compatibility behavior, so they should not all be deleted just because their names contain “AMR.”
+## Completed in the current work
 
-The two edits already made also need review before relying on them; they may leave stale references or unintended Settings behavior. MiniMax provider/media configuration should remain separate unless you specifically want MiniMax removed too.
+- Added distinct `Free` and `Free tier (limited)` model cost labels to the
+  chat-model picker, with strings in all 19 web locales.
+- OpenRouter model discovery now reads its reported input/output prices and
+  labels a model `Free` only for an explicit `:free` route or zero prices for
+  both input and output. Unknown prices remain untagged.
+- Focused tests passed:
+  - `pnpm --filter @open-design/web exec vitest run -c vitest.config.ts tests/components/modelOptions.test.tsx`
+  - `pnpm --filter @open-design/daemon exec vitest run -c vitest.config.ts tests/connection-test.test.ts -t "OpenRouter zero-priced models|OpenAI-compatible models from /models"`
+- `pnpm guard` passed.
+- `pnpm typecheck` passed.
+- `git diff --check` passed.
+- Workspace setup needed `pnpm install --frozen-lockfile --ignore-scripts` after
+  the regular install hit an unrelated ONNX Runtime CUDA binary 404. The native
+  `better-sqlite3` binding was built separately with
+  `pnpm --filter @open-design/daemon rebuild better-sqlite3`.
 
-## Still to verify
+## Uncommitted files
 
-1. Inspect the current diff and confirm what was actually pushed.
-2. Run the web typecheck and focused tests for the two edited areas.
-3. Check daemon startup/runtime behavior and the restored `plugins` and `design-templates` folders.
-4. Only after deciding the intended AMR scope, verify the corresponding daemon, web, packaged, and test paths. An app build has **not** been confirmed.
+- `apps/daemon/src/integrations/provider-models.ts`
+- `apps/daemon/tests/connection-test.test.ts`
+- `apps/web/src/components/modelCapabilityTags.ts`
+- `apps/web/src/i18n/types.ts`
+- `apps/web/src/i18n/locales/*.ts` (all 19 locales)
+- `apps/web/src/types.ts`
+- `apps/web/tests/components/modelOptions.test.tsx`
+- `packages/contracts/src/api/registry.ts`
 
-**Bottom line:** cleanup is partial, and I can’t recommend installing yet.
+## Still not implemented
+
+- Cloudflare Workers AI chat/image integration (Cloudflare credentials have not
+  been requested or pasted into chat; do not ask for secrets in chat).
+- Cost/free labels for image-generation models.
+- Reliable reasoning-capability labels for provider models.
+- Any changes to AI-credit usage/routing.
+- Packaged installer/app identity change from `Open Design` to `Zeck`.
+- A Windows `.exe` build or install smoke test.
+
+## Next steps
+
+1. Resolve the missing `assets/community-pets` packaging input. Obtain assets
+   whose reuse rights are clear, or get an explicit decision to make the bundle
+   optional (bundled pets would not ship, but remain downloadable in-app).
+2. Re-run `pnpm tools-pack win build --to nsis --json`; verify the resulting
+   installer's exact output path and app identity before sharing it.
+3. If the Windows installer is available, install and smoke-test it on Windows
+   (this current Linux environment has no Windows desktop runtime).
+4. Review the uncommitted diff, then send it to GitHub on an appropriate
+   feature branch/PR; do not push directly to `main`.
+5. Continue the separate Cloudflare, image-cost, reasoning-label, and credit
+   work as explicitly scoped phases.
+
+## Earlier AMR cleanup context
+
+- The repository still has substantial AMR runtime and web integration.
+- MiniMax provider/media configuration is separate from AMR and should remain
+  unless its removal is explicitly requested.
+- Earlier `ChatPane.tsx` / `SettingsDialog.tsx` AMR recovery edits were reported
+  as limited and unverified at that time. The existing main history has moved
+  since then; inspect current Git history/diffs before acting on that older
+  claim.
+- Do not remove every AMR-named path mechanically: some references may support
+  collaboration or compatibility behavior.

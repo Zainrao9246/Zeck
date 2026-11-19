@@ -715,6 +715,8 @@ export const ko: Dict = {
   'modelCost.halfToOne': '중간 비용',
   'modelCost.oneToFour': '높은 비용',
   'modelCost.overFour': '최고 비용',
+  'modelCost.free': '무료',
+  'modelCost.freeTier': '무료 요금제(한도 있음)',
   'settings.fetchModels': '모델 가져오기',
   'settings.fetchModelsTitle': '이 공급자에서 사용 가능한 모델을 가져옵니다',
   'settings.fetchModelsRunning': '모델을 불러오는 중…',

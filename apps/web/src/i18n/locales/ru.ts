@@ -715,6 +715,8 @@ export const ru: Dict = {
   'modelCost.halfToOne': 'Средняя стоимость',
   'modelCost.oneToFour': 'Высокая стоимость',
   'modelCost.overFour': 'Максимальная стоимость',
+  'modelCost.free': 'Бесплатно',
+  'modelCost.freeTier': 'Бесплатный тариф (с лимитом)',
   'settings.fetchModels': 'Загрузить модели',
   'settings.fetchModelsTitle': 'Загрузить доступные модели от этого провайдера',
   'settings.fetchModelsRunning': 'Загрузка моделей…',

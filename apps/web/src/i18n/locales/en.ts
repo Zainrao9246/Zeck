@@ -712,6 +712,8 @@ export const en: Dict = {
   'modelCost.halfToOne': 'Medium cost',
   'modelCost.oneToFour': 'High cost',
   'modelCost.overFour': 'Highest cost',
+  'modelCost.free': 'Free',
+  'modelCost.freeTier': 'Free tier (limited)',
   'settings.fetchModels': 'Fetch models',
   'settings.fetchModelsTitle': 'Fetch available models from this provider',
   'settings.fetchModelsRunning': 'Fetching models…',

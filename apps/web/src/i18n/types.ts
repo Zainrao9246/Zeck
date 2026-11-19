@@ -609,6 +609,8 @@ export interface Dict {
   'modelCost.halfToOne': string;
   'modelCost.oneToFour': string;
   'modelCost.overFour': string;
+  'modelCost.free': string;
+  'modelCost.freeTier': string;
   'settings.fetchModels': string;
   'settings.fetchModelsTitle': string;
   'settings.fetchModelsRunning': string;

@@ -1,4 +1,10 @@
-export type ModelCost = 'low' | 'medium' | 'high' | 'very_high';
+export type ModelCost =
+  | 'free'
+  | 'free_tier'
+  | 'low'
+  | 'medium'
+  | 'high'
+  | 'very_high';
 
 export type ModelCapability = 'standard' | 'advanced' | 'best_quality';
 

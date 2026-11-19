@@ -715,6 +715,8 @@ export const ar: Dict = {
   'modelCost.halfToOne': 'تكلفة متوسطة',
   'modelCost.oneToFour': 'تكلفة مرتفعة',
   'modelCost.overFour': 'أعلى تكلفة',
+  'modelCost.free': 'مجاني',
+  'modelCost.freeTier': 'خطة مجانية (محدودة)',
   'settings.fetchModels': 'جلب النماذج',
   'settings.fetchModelsTitle': 'جلب النماذج المتاحة من هذا المزوّد',
   'settings.fetchModelsRunning': 'جارٍ جلب النماذج…',

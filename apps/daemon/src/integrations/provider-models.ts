@@ -126,27 +126,59 @@ function isOpenAiChatModelId(id: string): boolean {
   return !/(?:^|[-_.:])(?:t2i|i2i|t2v|i2v|v2v|tts|asr|ocr)(?:[-_.:]|$)/u.test(normalized);
 }
 
-function extractOpenAiModels(data: unknown): ProviderModelOption[] {
+function extractOpenAiModels(data: unknown, isOpenRouter: boolean): ProviderModelOption[] {
   const items = (data as { data?: unknown }).data;
   if (!Array.isArray(items)) return [];
   return uniqueModels(
     items
-      .map(openAiModelOption)
+      .map((item) => openAiModelOption(item, isOpenRouter))
       .filter((model): model is ProviderModelOption => model != null),
   );
 }
 
-function openAiModelOption(item: unknown): ProviderModelOption | null {
+function openAiModelOption(item: unknown, isOpenRouter: boolean): ProviderModelOption | null {
   if (!item || typeof item !== 'object') return null;
-  const obj = item as { id?: unknown; metadata?: unknown };
+  const obj = item as { id?: unknown; metadata?: unknown; pricing?: unknown };
   const id = typeof obj?.id === 'string' ? obj.id : '';
   if (!id || !isOpenAiChatModelId(id)) return null;
-  const metadata = extractModelMetadata(obj.metadata);
+  const pricing = isOpenRouter ? extractOpenRouterPricing(obj.pricing) : null;
+  const modelMetadata = extractModelMetadata(obj.metadata);
+  const isFree =
+    isOpenRouter &&
+    (id.endsWith(':free') ||
+      (pricing !== null &&
+        pricing.inputPriceUsdPerMillion === 0 &&
+        pricing.outputPriceUsdPerMillion === 0));
+  const metadata = isFree
+    ? { ...modelMetadata, cost: 'free' as const }
+    : modelMetadata;
   return {
     id,
     label: id,
     ...(metadata ? { metadata } : {}),
+    ...(pricing ?? {}),
   };
+}
+
+function extractOpenRouterPricing(value: unknown): Pick<
+  ProviderModelOption,
+  'inputPriceUsdPerMillion' | 'outputPriceUsdPerMillion'
+> | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  const pricing = value as { prompt?: unknown; completion?: unknown };
+  const inputPrice = parseUsdPricePerToken(pricing.prompt);
+  const outputPrice = parseUsdPricePerToken(pricing.completion);
+  if (inputPrice === null || outputPrice === null) return null;
+  return {
+    inputPriceUsdPerMillion: inputPrice * 1_000_000,
+    outputPriceUsdPerMillion: outputPrice * 1_000_000,
+  };
+}
+
+function parseUsdPricePerToken(value: unknown): number | null {
+  if (typeof value !== 'string' && typeof value !== 'number') return null;
+  const price = typeof value === 'number' ? value : Number(value);
+  return Number.isFinite(price) && price >= 0 ? price : null;
 }
 
 function extractModelMetadata(value: unknown): ModelMetadata | null {
@@ -162,7 +194,9 @@ function extractModelMetadata(value: unknown): ModelMetadata | null {
 }
 
 function parseModelCost(value: unknown): ModelCost | null {
-  return value === 'low' ||
+  return value === 'free' ||
+    value === 'free_tier' ||
+    value === 'low' ||
     value === 'medium' ||
     value === 'high' ||
     value === 'very_high'
@@ -277,7 +311,11 @@ function providerModelsHeaders(
   return {};
 }
 
-function extractModels(protocol: ConnectionTestProtocol, data: unknown): ProviderModelOption[] {
+function extractModels(
+  protocol: ConnectionTestProtocol,
+  data: unknown,
+  baseUrl: string,
+): ProviderModelOption[] {
   // SenseAudio's /v1/models response follows the OpenAI envelope
   // (`{ data: [{ id, ... }] }`), so the same extractor handles both.
   // Chat picker: drop media-generation rows. AIHubMix's `?type=llm` matches any
@@ -285,7 +323,11 @@ function extractModels(protocol: ConnectionTestProtocol, data: unknown): Provide
   // (e.g. gpt-image-2 → "image_generation,llm") would otherwise leak in. Those
   // belong to the dedicated image/video/audio pickers.
   if (protocol === 'aihubmix') return parseAIHubMixCatalog(data, { chatOnly: true });
-  if (protocol === 'openai' || protocol === 'senseaudio') return extractOpenAiModels(data);
+  if (protocol === 'openai' || protocol === 'senseaudio') {
+    const hostname = new URL(baseUrl).hostname.toLowerCase();
+    const isOpenRouter = hostname === 'openrouter.ai' || hostname.endsWith('.openrouter.ai');
+    return extractOpenAiModels(data, isOpenRouter);
+  }
   if (protocol === 'anthropic') return extractAnthropicModels(data);
   if (protocol === 'google') return extractGoogleModels(data);
   return [];
@@ -385,7 +427,7 @@ export async function listProviderModels(
       };
     }
 
-    const models = extractModels(input.protocol, data);
+    const models = extractModels(input.protocol, data, validated.parsed.toString());
     console.log(
       `[provider:models] ${input.protocol} ${validated.parsed.hostname} → ${models.length} models in ${latencyMs}ms`,
     );

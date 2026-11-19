@@ -715,6 +715,8 @@ export const id: Dict = {
   'modelCost.halfToOne': 'Biaya sedang',
   'modelCost.oneToFour': 'Biaya tinggi',
   'modelCost.overFour': 'Biaya tertinggi',
+  'modelCost.free': 'Gratis',
+  'modelCost.freeTier': 'Paket gratis (terbatas)',
   'settings.fetchModels': 'Ambil model',
   'settings.fetchModelsTitle': 'Ambil model yang tersedia dari penyedia ini',
   'settings.fetchModelsRunning': 'Mengambil model…',

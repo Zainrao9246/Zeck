@@ -715,6 +715,8 @@ export const fa: Dict = {
   'modelCost.halfToOne': 'هزینه متوسط',
   'modelCost.oneToFour': 'هزینه بالا',
   'modelCost.overFour': 'بیشترین هزینه',
+  'modelCost.free': 'رایگان',
+  'modelCost.freeTier': 'طرح رایگان (محدود)',
   'settings.fetchModels': 'دریافت مدل‌ها',
   'settings.fetchModelsTitle': 'دریافت مدل‌های موجود از این ارائه‌دهنده',
   'settings.fetchModelsRunning': 'در حال دریافت مدل‌ها…',

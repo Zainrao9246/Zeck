@@ -715,6 +715,8 @@ export const uk: Dict = {
   'modelCost.halfToOne': 'Середня вартість',
   'modelCost.oneToFour': 'Висока вартість',
   'modelCost.overFour': 'Найвища вартість',
+  'modelCost.free': 'Безкоштовно',
+  'modelCost.freeTier': 'Безкоштовний тариф (обмежений)',
   'settings.fetchModels': 'Отримати моделі',
   'settings.fetchModelsTitle': 'Отримати доступні моделі від цього постачальника',
   'settings.fetchModelsRunning': 'Отримання моделей…',

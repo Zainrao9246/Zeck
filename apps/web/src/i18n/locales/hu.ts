@@ -715,6 +715,8 @@ export const hu: Dict = {
   'modelCost.halfToOne': 'Közepes költség',
   'modelCost.oneToFour': 'Magas költség',
   'modelCost.overFour': 'Legmagasabb költség',
+  'modelCost.free': 'Ingyenes',
+  'modelCost.freeTier': 'Ingyenes csomag (korlátozott)',
   'settings.fetchModels': 'Modellek lekérése',
   'settings.fetchModelsTitle': 'Elérhető modellek lekérése ettől a szolgáltatótól',
   'settings.fetchModelsRunning': 'Modellek lekérése…',

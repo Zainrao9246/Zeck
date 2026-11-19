@@ -715,6 +715,8 @@ export const ptBR: Dict = {
   'modelCost.halfToOne': 'Custo médio',
   'modelCost.oneToFour': 'Custo alto',
   'modelCost.overFour': 'Custo máximo',
+  'modelCost.free': 'Grátis',
+  'modelCost.freeTier': 'Plano gratuito (limitado)',
   'settings.fetchModels': 'Buscar modelos',
   'settings.fetchModelsTitle': 'Buscar modelos disponíveis deste provedor',
   'settings.fetchModelsRunning': 'Buscando modelos…',

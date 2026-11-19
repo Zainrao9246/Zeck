@@ -240,6 +240,11 @@ describe('POST /api/provider/models', () => {
             metadata: { cost: 'medium', capability: 'advanced' },
             default: true,
           },
+          {
+            id: 'gpt-4o-free-tier',
+            object: 'model',
+            metadata: { cost: 'free_tier' },
+          },
           { id: 'gpt-4o', object: 'model' },
           { id: 'wan2-1-14b-t2v-250225', object: 'model' },
           { id: 'text-embedding-3-large', object: 'model' },
@@ -279,12 +284,74 @@ describe('POST /api/provider/models', () => {
           label: 'gpt-4o',
           metadata: { cost: 'medium', capability: 'advanced' },
         },
+        {
+          id: 'gpt-4o-free-tier',
+          label: 'gpt-4o-free-tier',
+          metadata: { cost: 'free_tier' },
+        },
       ],
     });
     expect(body.models?.[0]?.enabled).toBeUndefined();
     expect(body.models?.[0]?.default).toBeUndefined();
     expect(body.models?.[1]?.enabled).toBeUndefined();
     expect(body.models?.[1]?.default).toBeUndefined();
+  });
+
+  it('marks OpenRouter zero-priced models as free without guessing for paid models', async () => {
+    const fetchMock = passThroughOrUpstream((url) => {
+      expect(url).toBe('https://openrouter.ai/api/v1/models');
+      return jsonResponse({
+        data: [
+          {
+            id: 'provider/model-free',
+            pricing: { prompt: '0', completion: '0' },
+          },
+          {
+            id: 'provider/model-paid',
+            pricing: { prompt: '0.000001', completion: '0.000002' },
+          },
+          {
+            id: 'provider/model-partial-zero',
+            pricing: { prompt: '0', completion: '0.000002' },
+          },
+        ],
+      });
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const res = await realFetch(`${baseUrl}/api/provider/models`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        protocol: 'openai',
+        baseUrl: 'https://openrouter.ai/api/v1',
+        apiKey: 'sk-openrouter',
+      }),
+    });
+
+    expect(res.status).toBe(200);
+    await expect(res.json()).resolves.toMatchObject({
+      ok: true,
+      kind: 'success',
+      models: [
+        {
+          id: 'provider/model-free',
+          metadata: { cost: 'free' },
+          inputPriceUsdPerMillion: 0,
+          outputPriceUsdPerMillion: 0,
+        },
+        {
+          id: 'provider/model-paid',
+          inputPriceUsdPerMillion: 1,
+          outputPriceUsdPerMillion: 2,
+        },
+        {
+          id: 'provider/model-partial-zero',
+          inputPriceUsdPerMillion: 0,
+          outputPriceUsdPerMillion: 2,
+        },
+      ],
+    });
   });
 
   // Regression for #5367: a gateway's /models catalogue can list embedding

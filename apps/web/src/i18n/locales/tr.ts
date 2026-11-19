@@ -715,6 +715,8 @@ export const tr: Dict = {
   'modelCost.halfToOne': 'Orta maliyet',
   'modelCost.oneToFour': 'Yüksek maliyet',
   'modelCost.overFour': 'En yüksek maliyet',
+  'modelCost.free': 'Ücretsiz',
+  'modelCost.freeTier': 'Ücretsiz katman (sınırlı)',
   'settings.fetchModels': 'Modelleri getir',
   'settings.fetchModelsTitle': 'Bu sağlayıcıdan kullanılabilir modelleri getir',
   'settings.fetchModelsRunning': 'Modeller getiriliyor…',

@@ -232,6 +232,39 @@ describe('SearchableModelSelect', () => {
     expect(option.querySelector('[data-label]')).toBeNull();
   });
 
+  it('distinguishes zero-priced models from limited free-tier models', async () => {
+    render(
+      <SearchableModelSelect
+        models={[
+          {
+            id: 'openrouter/model-free',
+            label: 'model-free',
+            metadata: { cost: 'free' },
+          },
+          {
+            id: 'openrouter/model-free-tier',
+            label: 'model-free-tier',
+            metadata: { cost: 'free_tier' },
+          },
+        ]}
+        value="openrouter/model-free"
+        onChange={vi.fn()}
+        searchPlaceholder="Search models"
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('combobox'));
+
+    const freeOption = await screen.findByRole('option', { name: 'model-free' });
+    const freeTierOption = await screen.findByRole('option', {
+      name: 'model-free-tier',
+    });
+    expect(freeOption.textContent).toContain('Free');
+    expect(freeTierOption.textContent).toContain('Free tier (limited)');
+    expect(freeOption).toHaveAccessibleDescription('Free');
+    expect(freeTierOption).toHaveAccessibleDescription('Free tier (limited)');
+  });
+
   it('disables unavailable options and shows the provided hint', async () => {
     const onChange = vi.fn();
     render(

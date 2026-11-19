@@ -715,6 +715,8 @@ export const th: Dict = {
   'modelCost.halfToOne': 'ต้นทุนปานกลาง',
   'modelCost.oneToFour': 'ต้นทุนสูง',
   'modelCost.overFour': 'ต้นทุนสูงสุด',
+  'modelCost.free': 'ฟรี',
+  'modelCost.freeTier': 'แพ็กเกจฟรี (มีข้อจำกัด)',
   'settings.fetchModels': 'ดึงโมเดล',
   'settings.fetchModelsTitle': 'ดึงโมเดลที่มีอยู่จากผู้ให้บริการนี้',
   'settings.fetchModelsRunning': 'กำลังดึงโมเดล…',

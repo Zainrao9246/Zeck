@@ -708,6 +708,8 @@ export const zhTW: Dict = {
   "modelCost.halfToOne": "中成本",
   "modelCost.oneToFour": "高成本",
   "modelCost.overFour": "最高成本",
+  "modelCost.free": "免費",
+  "modelCost.freeTier": "免費方案（有限）",
   "settings.fetchModels": "取得模型",
   "settings.fetchModelsTitle": "從此供應商取得可用模型",
   "settings.fetchModelsRunning": "正在擷取模型…",
