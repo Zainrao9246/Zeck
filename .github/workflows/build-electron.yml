@@ -37,7 +37,7 @@ permissions:
 
 concurrency:
   group: build-electron-${{ github.event_name == 'workflow_dispatch' && github.run_id || github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   mac_arm64:
