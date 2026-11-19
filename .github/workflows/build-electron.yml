@@ -1,4 +1,4 @@
-name: Build Electron apps
+name: Build Windows Electron installer
 
 on:
   workflow_dispatch:
